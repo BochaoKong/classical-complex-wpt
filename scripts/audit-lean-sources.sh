@@ -4,9 +4,21 @@ set -euo pipefail
 repository_root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$repository_root"
 
-pattern='\b(sorry|admit|sorryAx|native_decide|Lean\.ofReduceBool|axiom|opaque|unsafe|extern)\b'
-matches=$(rg -n "$pattern" \
-  --glob '*.lean' --glob '!.lake/**' --glob '!docbuild/.lake/**' . || true)
+matches=$(python3 <<'PY'
+import pathlib
+import re
+
+pattern = re.compile(
+    r"\b(sorry|admit|sorryAx|native_decide|Lean\.ofReduceBool|axiom|opaque|unsafe|extern)\b"
+)
+for path in sorted(pathlib.Path(".").rglob("*.lean")):
+    if any(part.startswith(".") for part in path.parts):
+        continue
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if pattern.search(line):
+            print(f"./{path}:{line_number}:{line}")
+PY
+)
 expected='./Challenge.lean:69:  sorry'
 
 if [ "$matches" != "$expected" ]; then
