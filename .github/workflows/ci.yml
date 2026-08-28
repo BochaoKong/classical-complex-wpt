@@ -33,7 +33,7 @@ jobs:
       - name: Reject retained template values in a derived repository
         if: github.repository != 'PalomarRegistry/PalomarTemplate'
         run: ruby scripts/validate-formalization.rb
-      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
         with:
           version: "0.11.3"
       - name: Validate metadata against the upstream schema
