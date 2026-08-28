@@ -6,18 +6,19 @@ Palomar registration, acceptance, or editorial review.
 ## Snapshot
 
 - Local repository path: `/Volumes/Extreme Pro/Lean/wpt`.
-- Current Git remote: `starter`, pointing to
-  `https://github.com/PalomarRegistry/PalomarTemplate.git`. This is the template
-  remote, not a project-owned submission remote.
+- Public submission repository:
+  `https://github.com/BochaoKong/classical-complex-wpt.git` (`origin`).
 - Project path: repository root.
-- Branch: `codex/classical-complex-wpt`.
-- Clean-Linux-verified theorem/package content SHA:
-  `8497ff7deffacb130965f4bba0ddaff1dc231f76`.
-- Final attestation commit: the commit containing this handoff, reported as a
-  full 40-character SHA in the final Codex response and recoverable with
-  `git rev-parse HEAD`. A commit cannot contain its own hash without changing
-  that hash; this file therefore records the independently verified content
-  predecessor and the external handoff records the final attestation SHA.
+- Branch: `main`.
+- Submission commit: use the full 40-character public commit reported by
+  `git rev-parse HEAD` after all final documentation changes are committed and
+  pushed. Confirm that it is exactly the commit shown by
+  `git ls-remote origin refs/heads/main`. A commit cannot contain its own hash,
+  so the Palomar form, rather than this file, is the authoritative record of
+  the submitted SHA.
+- `VERIFICATION.md` retains the historical clean-Linux verification record for
+  the pre-public content snapshot named there. That internal snapshot is
+  provenance only; it is not the SHA to enter in the Palomar submission form.
 - Compared declaration:
   `ClassicalComplexWPT.classicalComplexWeierstrassPreparation`.
 - Comparator configuration: `comparator.json`.
@@ -28,18 +29,16 @@ Palomar registration, acceptance, or editorial review.
 
 ## Clean verification commands
 
-The following creates a detached local checkout without copying any generated
-files from the source worktree. Replace `source_repo` with the human
-maintainer's project-owned remote after it exists, and replace `snapshot` with
-the final externally reported attestation SHA to repeat the editorial checks on
-that exact commit.
+The following creates a detached checkout of the exact public commit without
+copying generated files from the source worktree. Replace the placeholder with
+the full 40-character SHA that will be entered in the Palomar form.
 
 ```bash
-source_repo='/Volumes/Extreme Pro/Lean/wpt'
-snapshot=8497ff7deffacb130965f4bba0ddaff1dc231f76
+source_repo='https://github.com/BochaoKong/classical-complex-wpt.git'
+snapshot='<full-40-character-submission-SHA>'
 scratch=$(mktemp -d /tmp/classical-complex-wpt.XXXXXX)
 repo="$scratch/repository"
-git clone --no-local "$source_repo" "$repo"
+git clone "$source_repo" "$repo"
 git -C "$repo" checkout --detach "$snapshot"
 test "$(git -C "$repo" rev-parse HEAD)" = "$snapshot"
 test -z "$(git -C "$repo" status --porcelain=v1 --untracked-files=all)"
@@ -104,10 +103,11 @@ Before submission, the responsible maintainer must:
 
 1. inspect the immutable snapshot and all candid scope/fidelity disclosures;
 2. confirm that the repository author and responsible-maintainer identity
-   `BochaoKong` is correct and choose a project-owned public Git remote;
-3. compare the final attestation commit to the verified content SHA and confirm
-   that only the documented workflow/metadata/editorial files differ;
-4. push the exact final attestation commit without modifying it;
+   `BochaoKong` is correct;
+3. commit any final documentation changes and rerun the relevant verification
+   gates;
+4. push the exact submission commit to `origin/main` and confirm that the local
+   and public full 40-character SHAs match;
 5. confirm authorization to submit the substantive formalization;
 6. decide whether to obtain external human mathematical/code review; and
 7. complete the current Palomar authorization and submission process at
