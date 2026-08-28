@@ -1,0 +1,122 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Classical Complex-Analytic Weierstrass Preparation"
+  description: >-
+    A Mathlib-only Lean 4 formalization of the classical complex-analytic
+    Weierstrass preparation theorem at the origin. For every number of base
+    variables and every preparation degree, including the zero-dimensional and
+    degree-zero cases, it constructs the distinguished monic polynomial and
+    nonvanishing analytic unit and proves uniqueness of all factors as germs.
+  authors:
+    - "BochaoKong"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "BochaoKong"
+
+classification:
+  arxiv: ["math.CV"]
+  msc2020: ["32A05", "32A10", "32B05"]
+
+sources:
+  - title: "Tasty Bits of Several Complex Variables"
+    authors:
+      - "Jiří Lebl"
+    id: "https://www.jirka.org/scv/scv.pdf"
+    type: "textbook"
+    location: "Version 4.4, Section 6.2, pp. 169–174, Theorem 6.2.3"
+    relationship: "independently-proves"
+    note: >-
+      The source states classical analytic preparation and uniqueness on a
+      polydisc. This formalization proves the corresponding germ theorem by a
+      distinct weighted-l1 Banach-division argument rather than the source's
+      contour and zero-counting proof.
+    license: "CC BY-NC-SA 4.0"
+    author_endorsement: "not-contacted"
+
+related_formalizations:
+  - id: >-
+      https://github.com/leanprover-community/mathlib4/blob/81a5d257c8e410db227a6665ed08f64fea08e997/Mathlib/RingTheory/PowerSeries/WeierstrassPreparation.lean
+    relationship: "independent"
+    note: >-
+      Mathlib's existing theorem is algebraic preparation for formal power
+      series over complete local rings. It neither implies nor is used as a
+      substitute for the analytic convergence theorem proved here.
+
+status:
+  scope: >-
+    Proves at the origin the classical complex-analytic Weierstrass preparation
+    theorem for f : C^n x C -> C from an exact distinguished-variable order
+    expressed by iterated derivatives. It constructs analytic lower
+    coefficients vanishing at zero, an analytic unit nonzero at zero, an
+    eventual-neighborhood factorization, and full coefficient and unit germ
+    uniqueness, uniformly for all natural n and d. An explicit open-neighborhood
+    corollary is included. An arbitrary-base-point translation and a public
+    general division theorem are not included.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["OpenAI GPT-5-family Codex (exact backend identifier not exposed)"]
+      framework: "Codex multi-agent v2"
+      tool_setup: >-
+        AI-assisted Lean development with parallel proof, API-reconnaissance,
+        statement-audit, convergence-audit, and trust-audit agents; all accepted
+        artifacts were compiled locally against the pinned toolchain.
+      cost:
+        wall_time: >-
+          approximately 2.5 hours through the final verification checkpoint,
+          measured by the Codex goal timer
+        spend_usd: "subscription-based; not tracked"
+        hardware: >-
+          local macOS workstation plus a non-root Ubuntu 24.04 aarch64 Lima/VZ
+          VM for clean-checkout Landlock verification
+  spend_usd: "subscription-based; not tracked"
+  notes: >-
+    Codex performed the implementation and automated audits under user
+    direction. No human mathematical or code review is claimed by this
+    metadata.
+
+fidelity:
+  divergences: >-
+    The compared theorem is the origin-based germ formulation and therefore
+    does not retain the source theorem's chosen polydisc or its clause locating
+    every polynomial zero inside the distinguished disc. It includes the
+    natural d=0 unit case and n=0 one-variable case. Analyticity and equality of
+    germs are encoded by AnalyticAt C and EventuallyEq at the neighborhood
+    filter. The public unit condition is nonvanishing at the origin; continuity
+    yields, and a proved corollary exposes, nonvanishing on a smaller open
+    neighborhood. The proof architecture is independent of the cited contour
+    proof.
+
+review:
+  status: "agent-reviewed"
+  reviewers:
+    - "OpenAI Codex agents (automated; no external human reviewer)"
+  notes: >-
+    The frozen statement received an independent semantic and adversarial
+    audit. Separate Codex agents audited the weighted convergence bridge, the
+    normalization/division construction, and full germ uniqueness. No external
+    human peer review or Palomar editorial review has occurred.
+
+alignment:
+  namespace: "ClassicalComplexWPT"
+  statements:
+    - source: "Lebl, Tasty Bits of Several Complex Variables, Theorem 6.2.3"
+      lean: "ClassicalComplexWPT.classicalComplexWeierstrassPreparation"
+      module: "ClassicalComplexWPT.Main"
+      status: "proved"
+      note: >-
+        Exact order is exposed through lower iterated derivatives vanishing and
+        the d-th derivative being nonzero. The conclusion is the equivalent
+        local-germ formulation, including monicity, coefficient vanishing,
+        analytic-unit nonvanishing, and uniqueness of both factors.
+
+acknowledgements: >-
+  Built with Lean 4 and Mathlib, from the Palomar Registry starter layout.
+  Thanks to the Mathlib contributors, the Comparator, lean4export, NanoDa, and
+  Landrun developers, and the authors of the cited complex-analysis source.
